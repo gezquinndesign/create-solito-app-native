@@ -1,0 +1,18 @@
+{
+  "name": "create-solito-app-native",
+  "version": "0.0.1",
+  "description": "A script that creates a solito monorepo for you in seconds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@react-native-community/cli-tools": "^11.3.8",
+    "cross-spawn": "7.0.3"
+  },
+  "bin": {
+    "create-solito-app-native": "./index.js"
+  },
+  "author": "Gez Quinn",
+  "license": "MIT"
+}

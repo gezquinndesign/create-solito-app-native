@@ -201,7 +201,7 @@ ${chalk.bold(chalk.red(`Please pick a different project name 🥸`))}`
   console.log('Configuring your new project...')
   console.log()
   try {
-    await renameProject(
+    renameProject(
       resolvedProjectPath,
     )
     // await install(resolvedProjectPath, null, { packageManager, isOnline })
@@ -282,7 +282,7 @@ export async function installDependenciesAsync(
   }
 }
 
-export async function renameProject(
+export function renameProject(
   projectRoot: string,
 ) {
   console.log(`YO----->${projectRoot}/apps/native`)

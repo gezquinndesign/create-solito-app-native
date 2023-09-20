@@ -46,12 +46,6 @@ ${chalk.blueBright(`npx ${packageJson.name} twitter-clone`)}`
   Explicitly tell the CLI to bootstrap the app using npm
 `
   )
-  //   .option(
-  //     '--use-pnpm',
-  //     `
-  //   Explicitly tell the CLI to bootstrap the app using pnpm
-  // `
-  //   )
   .option(
     `-t, --template <template>`,
     'Options are `blank`, `with-tailwind`, `with-custom-font`. The default is `blank`'
@@ -87,19 +81,10 @@ async function downloadAndExtractExample(
     `https://codeload.github.com/gezquinndesign/solito-native-starter/tar.gz/main`
   )
 
-  // const result = await pipeline(
-  //   got.stream('https://codeload.github.com/nandorojo/solito/tar.gz/master'),
-  //   tar.extract({ cwd: root, strip: 3 }, [
-  //     `solito-master/example-monorepos/${name}`,
-  //   ])
-  // )
-
-  // return result
   await tar.x({
     file: tempFile,
     cwd: root,
     strip: 1,
-    // filter: (p) => p.includes(`solito-master/example-monorepos/${name}/`),
   })
 
   fs.unlinkSync(tempFile)
@@ -204,7 +189,6 @@ ${chalk.bold(chalk.red(`Please pick a different project name 🥸`))}`
     renameProject(
       projectName,
     )
-    // await install(resolvedProjectPath, null, { packageManager, isOnline })
   } catch (e: any) {
     console.error(
       '[solito] error naming project' + '\n',
@@ -215,17 +199,30 @@ ${chalk.bold(chalk.red(`Please pick a different project name 🥸`))}`
 
   const useYarn = packageManager === 'yarn'
 
-  console.log('Installing packages. This might take a couple of minutes.')
+  console.log('Installing packages...')
   console.log()
   try {
     await installDependenciesAsync(
       resolvedProjectPath,
       useYarn ? 'yarn' : 'npm'
     )
-    // await install(resolvedProjectPath, null, { packageManager, isOnline })
   } catch (e: any) {
     console.error(
       '[solito] error installing node_modules with ' + packageManager + '\n',
+      e?.message
+    )
+    process.exit(1)
+  }
+
+  console.log('Installing pods. This might take a couple of minutes.')
+  console.log()
+  try {
+    installPods(
+      projectName,
+    )
+  } catch (e: any) {
+    console.error(
+      '[solito] error installing pods' + '\n',
       e?.message
     )
     process.exit(1)
@@ -295,85 +292,11 @@ export function renameProject(
   });
 }
 
-
-// #!/usr/bin/env node
-
-// // Usage: npx create-solito-app-native my-app
-
-// const {
-//   default: DirectoryAlreadyExistsError,
-// } = require("./errors/DirectoryAlreadyExistsError");
-// const { validateProjectName } = require("./validate");
-
-// const spawn = require("cross-spawn");
-// const fs = require("fs");
-// const path = require("path");
-
-// // // The first argument will be the project name.
-// const projectName = process.argv[2];
-
-// function doesDirectoryExist(dir) {
-//   return fs.existsSync(dir);
-// }
-
-// try {
-//   validateProjectName(projectName);
-//   if (doesDirectoryExist(projectName)) {
-//     throw new DirectoryAlreadyExistsError(projectName);
-//   }
-// } catch (e) {
-//   console.error(e.message);
-//   process.exit(1);
-// }
-
-// const currentDir = process.cwd();
-// const projectDir = path.resolve(currentDir, projectName);
-
-// // Run `npm install` in the project directory to install
-// // the dependencies. We are using a third-party library
-// // called `cross-spawn` for cross-platform support.
-// // (Node has issues spawning child processes in Windows).
-// spawn.sync(
-//   "git",
-//   [
-//     "clone",
-//     "https://github.com/gezquinndesign/solito-native-starter.git",
-//     "https://codeload.github.com/gezquinndesign/solito-native-starter/tar.gz/master",
-//     projectName,
-//   ],
-//   { stdio: "inherit" }
-// );
-// spawn.sync("npx", ["react-native-rename@latest", projectName], {
-//   cwd: `${projectName}/apps/native`,
-//   stdio: "inherit",
-// });
-// spawn.sync("yarn", [], {
-//   cwd: `${projectName}`,
-//   stdio: "inherit",
-// });
-// spawn.sync("npx", ["pod-install@latest"], {
-//   cwd: `${projectName}/apps/native`,
-//   stdio: "inherit",
-// });
-// spawn.sync("rm", ["-rf", ".git"], {
-//   cwd: `${projectName}/apps/native`,
-//   stdio: "inherit",
-// });
-
-// console.log(`Success! created ${projectName} at ${projectDir}`);
-// console.log(
-//   "\n\n" +
-//     "Inside that directory, you can run several commands:" +
-//     "\n\n" +
-//     "  yarn web" +
-//     "\n" +
-//     "    Starts the development server for the Next.js site." +
-//     "\n\n" +
-//     "  yarn native" +
-//     "\n\n" +
-//     "We suggest you begin by typing:" +
-//     "\n\n" +
-//     `  cd ${projectName}` +
-//     "\n" +
-//     `  yarn web`
-// );
+export function installPods(
+  projectRoot: string,
+) {
+  spawn.sync("npx", ["pod-install@latest"], {
+    cwd: `${projectRoot}/apps/native`,
+    stdio: "inherit",
+  });
+}

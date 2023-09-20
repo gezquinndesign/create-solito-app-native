@@ -202,7 +202,7 @@ ${chalk.bold(chalk.red(`Please pick a different project name 🥸`))}`
   console.log()
   try {
     renameProject(
-      resolvedProjectPath,
+      projectName,
     )
     // await install(resolvedProjectPath, null, { packageManager, isOnline })
   } catch (e: any) {
@@ -285,11 +285,10 @@ export async function installDependenciesAsync(
 export function renameProject(
   projectRoot: string,
 ) {
-  console.log(`YO----->${projectRoot}/apps/native`)
   spawn.sync("rm", ["-rf", ".git"], {
-  cwd: `${projectRoot}/apps/native`,
-  stdio: "inherit",
-});
+    cwd: `${projectRoot}/apps/native`,
+    stdio: "inherit",
+  });
   spawn.sync("npx", ["react-native-rename@latest", projectRoot], {
     cwd: `${projectRoot}/apps/native`,
     stdio: "inherit",

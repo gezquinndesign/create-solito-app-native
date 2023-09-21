@@ -1,7 +1,7 @@
 # `create-solito-app-native`
 
 ```sh
-npx create-solito-app@latest
+npx create-solito-app-native@latest
 ```
 
 A script that creates a [bare react-native solito monorepo](https://github.com/gezquinndesign/solito-native-starter) for you in seconds.
